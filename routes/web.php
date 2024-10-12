@@ -15,3 +15,9 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+
+use App\Http\Controllers\LawsuitController;
+
+
+Route::resource('lawsuits', LawsuitController::class);
