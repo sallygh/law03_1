@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\LawsuitController;
+use App\Http\Controllers\ClientController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -17,7 +19,7 @@ Route::middleware([
 });
 
 
-use App\Http\Controllers\LawsuitController;
 
 
 Route::resource('lawsuits', LawsuitController::class);
+Route::resource('clients', ClientController::class);
