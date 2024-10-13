@@ -21,5 +21,6 @@ Route::middleware([
 
 
 
-Route::resource('lawsuits', LawsuitController::class);
+
 Route::resource('clients', ClientController::class);
+Route::resource('lawsuits', LawsuitController::class);

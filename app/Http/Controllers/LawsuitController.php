@@ -2,48 +2,63 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Lawsuit;
 use Illuminate\Http\Request;
 
 class LawsuitController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        $lawsuits = Lawsuit::all();
-        return view('lawsuits.index', compact('lawsuits'));
+        //
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
-        return view('lawsuits.create');
+        //
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
-        $lawsuit = new Lawsuit($request->all());
-        $lawsuit->save();
-        return redirect()->route('lawsuits.index');
+        //
     }
 
-    public function show(Lawsuit $lawsuit)
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
     {
-        return view('lawsuits.show', compact('lawsuit'));
+        //
     }
 
-    public function edit(Lawsuit $lawsuit)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
     {
-        return view('lawsuits.edit', compact('lawsuit'));
+        //
     }
 
-    public function update(Request $request, Lawsuit $lawsuit)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
     {
-        $lawsuit->update($request->all());
-        return redirect()->route('lawsuits.index');
+        //
     }
 
-    public function destroy(Lawsuit $lawsuit)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
     {
-        $lawsuit->delete();
-        return redirect()->route('lawsuits.index');
+        //
     }
 }
