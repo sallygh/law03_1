@@ -2,63 +2,96 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lawsuit;
 use Illuminate\Http\Request;
 
 class LawsuitController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $lawsuits = Lawsuit::all();
+        return view('lawsuits.index', compact('lawsuits'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('lawsuits.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'lawsuit_type' => 'required|string|max:255',
+            'lawsuit_subject' => 'required|string|max:255',
+            'court' => 'required|string|max:255',
+            'court_number' => 'required|string|max:255',
+            'plaintiff_name' => 'required|string|max:255',
+            'defendant_name' => 'required|string|max:255',
+            'lawsuit_status' => 'required|string|max:255',
+            'attachments.*' => 'file|mimes:jpeg,png,jpg,gif,svg,doc,docx|max:2048',
+            'agreed_amount' => 'required|numeric',
+            'remaining_amount' => 'required|numeric',
+            'paid_amount' => 'required|numeric',
+            'notes' => 'nullable|string',
+        ]);
+
+        if ($request->hasFile('attachments')) {
+            $attachments = [];
+            foreach ($request->file('attachments') as $file) {
+                $path = $file->store('attachments', 'public');
+                $attachments[] = $path;
+            }
+            $validatedData['attachments'] = json_encode($attachments);
+        }
+
+        Lawsuit::create($validatedData);
+        return redirect()->route('lawsuits.index')->with('success', 'تم إضافة القضية بنجاح');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Lawsuit $lawsuit)
     {
-        //
+        return view('lawsuits.show', compact('lawsuit'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Lawsuit $lawsuit)
     {
-        //
+        return view('lawsuits.edit', compact('lawsuit'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Lawsuit $lawsuit)
     {
-        //
+        $validatedData = $request->validate([
+            'lawsuit_type' => 'required|string|max:255',
+            'lawsuit_subject' => 'required|string|max:255',
+            'court' => 'required|string|max:255',
+            'court_number' => 'required|string|max:255',
+            'plaintiff_name' => 'required|string|max:255',
+            'defendant_name' => 'required|string|max:255',
+            'lawsuit_status' => 'required|string|max:255',
+            'attachments.*' => 'file|mimes:jpeg,png,jpg,gif,svg,doc,docx|max:2048',
+            'agreed_amount' => 'required|numeric',
+            'remaining_amount' => 'required|numeric',
+            'paid_amount' => 'required|numeric',
+            'notes' => 'nullable|string',
+        ]);
+
+        if ($request->hasFile('attachments')) {
+            $attachments = [];
+            foreach ($request->file('attachments') as $file) {
+                $path = $file->store('attachments', 'public');
+                $attachments[] = $path;
+            }
+            $validatedData['attachments'] = json_encode($attachments);
+        }
+
+        $lawsuit->update($validatedData);
+
+        return redirect()->route('lawsuits.index')->with('success', 'تم تحديث القضية بنجاح');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Lawsuit $lawsuit)
     {
-        //
+        $lawsuit->delete();
+        return redirect()->route('lawsuits.index')->with('success', 'تم حذف القضية بنجاح');
     }
 }
