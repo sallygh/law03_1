@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1>قائمة القضايا</h1>
-    <a href="{{ route('lawsuits.create') }}" class="btn btn-primary">إضافة قضية جديدة</a>
-    <table class="table mt-3">
-        <thead>
+<div class="container mt-5">
+    <h1 class="mb-4">قائمة القضايا</h1>
+    <a href="{{ route('lawsuits.create') }}" class="btn btn-primary mb-3">إضافة قضية جديدة</a>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
             <tr>
                 <th>رقم القضية</th>
                 <th>تصنيف الدعوى</th>
@@ -24,12 +24,12 @@
                 <td>{{ $lawsuit->court }}</td>
                 <td>{{ $lawsuit->lawsuit_status }}</td>
                 <td>
-                    <a href="{{ route('lawsuits.show', $lawsuit->id) }}" class="btn btn-info">عرض</a>
-                    <a href="{{ route('lawsuits.edit', $lawsuit->id) }}" class="btn btn-warning">تعديل</a>
+                    <a href="{{ route('lawsuits.show', $lawsuit->id) }}" class="btn btn-info btn-sm">عرض</a>
+                    <a href="{{ route('lawsuits.edit', $lawsuit->id) }}" class="btn btn-warning btn-sm">تعديل</a>
                     <form action="{{ route('lawsuits.destroy', $lawsuit->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger">حذف</button>
+                        <button type="submit" class="btn btn-danger btn-sm">حذف</button>
                     </form>
                 </td>
             </tr>
