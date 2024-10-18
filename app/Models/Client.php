@@ -15,4 +15,10 @@ class Client extends Model
         'address',
         'notes',
     ];
+
+
+    public function lawsuits()
+    {
+        return $this->hasMany(Lawsuit::class);
+    }
 }

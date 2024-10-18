@@ -22,9 +22,16 @@ class Lawsuit extends Model
         'remaining_amount',
         'paid_amount',
         'notes',
+
     ];
 
     protected $casts = [
         'attachments' => 'array',
     ];
+
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
 }
