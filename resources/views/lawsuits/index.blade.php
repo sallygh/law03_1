@@ -12,6 +12,8 @@
                 <th>موضوع الدعوى</th>
                 <th>المحكمة</th>
                 <th>حالة القضية</th>
+                <th>رقم الأساس</th>
+                <th>رقم القرار</th>
                 <th>الإجراءات</th>
             </tr>
         </thead>
@@ -23,6 +25,8 @@
                 <td>{{ $lawsuit->lawsuit_subject }}</td>
                 <td>{{ $lawsuit->court }}</td>
                 <td>{{ $lawsuit->lawsuit_status }}</td>
+                <td>{{ $lawsuit->base_number }}</td>
+                <td>{{ $lawsuit->decision_number }}</td>
                 <td>
                     <a href="{{ route('lawsuits.show', $lawsuit->id) }}" class="btn btn-info btn-sm">عرض</a>
                     <a href="{{ route('lawsuits.edit', $lawsuit->id) }}" class="btn btn-warning btn-sm">تعديل</a>

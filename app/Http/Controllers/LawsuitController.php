@@ -44,14 +44,14 @@ class LawsuitController extends Controller
             'plaintiff_name' => 'nullable|string|max:255',
             'defendant_name' => 'nullable|string|max:255',
             'lawsuit_status' => 'nullable|string|max:255',
+            'base_number' => 'nullable|integer|min:1|max:50000',
+            'decision_number' => 'nullable|integer|min:1|max:50000',
             'attachments.*' => 'file|mimes:jpeg,png,jpg,gif,svg,doc,docx|max:2048',
             'agreed_amount' => 'nullable|numeric',
             'remaining_amount' => 'nullable|numeric',
             'paid_amount' => 'nullable|numeric',
             'notes' => 'nullable|string',
-
         ]);
-
 
         // حفظ المرفقات إذا كانت موجودة
         if ($request->hasFile('attachments')) {
@@ -65,9 +65,11 @@ class LawsuitController extends Controller
 
         // إنشاء القضية
         Lawsuit::create($validatedData);
-        dd($validatedData);
-        //   return redirect()->route('lawsuits.index')->with('success', 'تم إضافة القضية بنجاح');
+
+        // إرجاع رد مع نجاح العملية
+        return redirect()->route('lawsuits.index')->with('success', 'تم إضافة القضية بنجاح');
     }
+
 
 
     public function show(Lawsuit $lawsuit)

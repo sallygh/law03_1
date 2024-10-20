@@ -32,8 +32,6 @@
         });
     });
 </script>
-
-</script>
 </body>
 
 
@@ -133,8 +131,49 @@
 
     <div class="form-group">
         <label for="lawsuit_status">حالة القضية</label>
-        <input type="text" class="form-control" id="lawsuit_status" name="lawsuit_status" value="{{ old('lawsuit_status', $lawsuit->lawsuit_status ?? '') }}">
+        <select id="lawsuit_status" name="lawsuit_status" class="form-control">
+            <option value="">اختر حالة القضية</option>
+            <option value="انتظار">انتظار</option>
+            <option value="قيد الدراسة">قيد الدراسة</option>
+            <option value="تم التسجيل">تم التسجيل</option>
+            <option value="تم الفصل">تم الفصل</option>
+        </select>
     </div>
+
+    <div class="form-group" id="base_number_group" style="display: none;">
+        <label for="base_number">رقم الأساس</label>
+        <input type="number" class="form-control" id="base_number" name="base_number" min="1" max="50000" value="{{ old('base_number', $lawsuit->base_number ?? '') }}">
+    </div>
+
+    <div class="form-group" id="decision_number_group" style="display: none;">
+        <label for="decision_number">رقم القرار</label>
+        <input type="number" class="form-control" id="decision_number" name="decision_number" min="1" max="50000" value="{{ old('decision_number', $lawsuit->decision_number ?? '') }}">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var lawsuitStatus = document.getElementById('lawsuit_status');
+            var baseNumberGroup = document.getElementById('base_number_group');
+            var decisionNumberGroup = document.getElementById('decision_number_group');
+
+            lawsuitStatus.addEventListener('change', function() {
+                var status = this.value;
+                if (status === 'تم التسجيل') {
+                    baseNumberGroup.style.display = 'block';
+                    decisionNumberGroup.style.display = 'none';
+                } else if (status === 'تم الفصل') {
+                    baseNumberGroup.style.display = 'block';
+                    decisionNumberGroup.style.display = 'block';
+                } else {
+                    baseNumberGroup.style.display = 'none';
+                    decisionNumberGroup.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+
+
     <div class="form-group">
         <label for="attachments">مرفقات</label>
         <input type="file" class="form-control" id="attachments" name="attachments[]" multiple>

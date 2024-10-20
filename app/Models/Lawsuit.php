@@ -22,6 +22,8 @@ class Lawsuit extends Model
         'remaining_amount',
         'paid_amount',
         'notes',
+        'base_number',
+        'decision_number',
 
     ];
 
