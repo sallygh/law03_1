@@ -30,7 +30,7 @@
                 <td>
                     <a href="{{ route('lawsuits.show', $lawsuit->id) }}" class="btn btn-info btn-sm">عرض</a>
                     <a href="{{ route('lawsuits.edit', $lawsuit->id) }}" class="btn btn-warning btn-sm">تعديل</a>
-                    <form action="{{ route('lawsuits.destroy', $lawsuit->id) }}" method="POST" style="display:inline;">
+                    <form action="{{ route('lawsuits.destroy', $lawsuit->id) }}" method="POST" style="display:inline;" onsubmit="return confirmDelete();">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger btn-sm">حذف</button>
@@ -41,4 +41,10 @@
         </tbody>
     </table>
 </div>
+
+<script>
+    function confirmDelete() {
+        return confirm('هل أنت متأكد أنك تريد حذف هذه القضية؟ هذا الإجراء لا يمكن التراجع عنه وستيم حذفها من قاعدة البيانات .');
+    }
+</script>
 @endsection
