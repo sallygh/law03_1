@@ -36,4 +36,14 @@ class Lawsuit extends Model
     {
         return $this->belongsTo(Client::class);
     }
+
+    public function plaintiff()
+    {
+        return $this->belongsTo(Client::class, 'plaintiff_name');
+    }
+
+    public function defendant()
+    {
+        return $this->belongsTo(Client::class, 'defendant_name');
+    }
 }

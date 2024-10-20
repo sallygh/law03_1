@@ -1,37 +1,52 @@
-<label for="lawsuit_type">تصنيف الدعوى</label>
-<select id="lawsuit_type" name="lawsuit_type" class="form-control" data-lawsuit-types='@json($lawsuitTypes)'>
-    <option value="">اختر تصنيف الدعوى</option>
-    @foreach(array_keys($lawsuitTypes) as $type)
-    <option value="{{ $type }}">{{ $type }}</option>
-    @endforeach
-</select>
+<div class="form-group">
+    <label for="lawsuit_type">تصنيف الدعوى</label>
+    <select id="lawsuit_type" name="lawsuit_type" class="form-control" data-lawsuit-types='@json($lawsuitTypes)'>
+        <option value="">اختر تصنيف الدعوى</option>
+        @foreach(array_keys($lawsuitTypes) as $type)
+        <option value="{{ $type }}" {{ old('lawsuit_type', $lawsuit->lawsuit_type ?? '') == $type ? 'selected' : '' }}>{{ $type }}</option>
+        @endforeach
+    </select>
+</div>
 
-<label for="lawsuit_subject">موضوع الدعوى</label>
-<select id="lawsuit_subject" name="lawsuit_subject" class="form-control">
-    <option value="">اختر موضوع الدعوى</option>
-</select>
+<div class="form-group">
+    <label for="lawsuit_subject">موضوع الدعوى</label>
+    <select id="lawsuit_subject" name="lawsuit_subject" class="form-control">
+        <option value="">اختر موضوع الدعوى</option>
+    </select>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var lawsuitTypeSelect = document.getElementById('lawsuit_type');
         var lawsuitTypes = JSON.parse(lawsuitTypeSelect.getAttribute('data-lawsuit-types'));
 
-        console.log(lawsuitTypes); // تحقق من بيانات lawsuitTypes في وحدة التحكم
+        // استخراج قيمة الموضوع من Blade بشكل آمن
+        var initialSubject = "{{ old('lawsuit_subject', $lawsuit->lawsuit_subject ?? '') }}";
 
-        lawsuitTypeSelect.addEventListener('change', function() {
-            var type = this.value;
-            var subjects = lawsuitTypes[type] || [];
+        function updateLawsuitSubjects(selectedType) {
+            var subjects = lawsuitTypes[selectedType] || [];
             var subjectSelect = document.getElementById('lawsuit_subject');
             subjectSelect.innerHTML = '<option value="">اختر موضوع الدعوى</option>';
             subjects.forEach(function(subject) {
                 var option = document.createElement('option');
                 option.value = subject;
                 option.text = subject;
+                if (subject === initialSubject) {
+                    option.selected = true;
+                }
                 subjectSelect.appendChild(option);
             });
+        }
+
+        updateLawsuitSubjects(lawsuitTypeSelect.value); // استدعاء الوظيفة لملء موضوع الدعوى بناءً على القيمة الحالية
+
+        lawsuitTypeSelect.addEventListener('change', function() {
+            updateLawsuitSubjects(this.value);
         });
     });
 </script>
+
+
 </body>
 
 
@@ -40,12 +55,13 @@
     <label for="court">المحكمة</label>
     <select id="court" name="court" class="form-control">
         <option value="">اختر المحكمة</option>
-        <option value="دمشق">دمشق</option>
-        <option value="ببيلا">ببيلا</option>
-        <option value="داريا">داريا</option>
-        <option value="جرمانا">جرمانا</option>
+        <option value="دمشق" {{ old('court', $lawsuit->court ?? '') == 'دمشق' ? 'selected' : '' }}>دمشق</option>
+        <option value="ببيلا" {{ old('court', $lawsuit->court ?? '') == 'ببيلا' ? 'selected' : '' }}>ببيلا</option>
+        <option value="داريا" {{ old('court', $lawsuit->court ?? '') == 'داريا' ? 'selected' : '' }}>داريا</option>
+        <option value="جرمانا" {{ old('court', $lawsuit->court ?? '') == 'جرمانا' ? 'selected' : '' }}>جرمانا</option>
     </select>
 </div>
+
 
 <div class="form-group">
     <label for="court_number">رقم المحكمة</label>
@@ -61,12 +77,11 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 
-    <!-- Select2 -->
     <label for="plaintiff_name">اسم المدعي</label>
     <div style="display: flex; align-items: center;">
         <select name="plaintiff_name" class="js-example-basic-single">
             @foreach($clients as $client)
-            <option value="{{ $client->id }}">{{ $client->full_name }}</option>
+            <option value="{{ $client->id }}" {{ old('plaintiff_name', $lawsuit->plaintiff_name ?? '') == $client->id ? 'selected' : '' }}>{{ $client->full_name }}</option>
             @endforeach
         </select>
         <button onclick="window.open('/clients/create', '_blank')" style="margin-left: 10px;">إضافة موكل جديد</button>
@@ -76,7 +91,7 @@
     <div style="display: flex; align-items: center;">
         <select name="defendant_name" class="js-example-basic-single">
             @foreach($clients as $client)
-            <option value="{{ $client->id }}">{{ $client->full_name }}</option>
+            <option value="{{ $client->id }}" {{ old('defendant_name', $lawsuit->defendant_name ?? '') == $client->id ? 'selected' : '' }}>{{ $client->full_name }}</option>
             @endforeach
         </select>
         <button onclick="window.open('/clients/create', '_blank')" style="margin-left: 10px;">إضافة مدعى عليه جديد</button>
@@ -88,7 +103,6 @@
                 var option = new Option(term, term, true, true);
                 return option;
             }
-
             $('.js-example-basic-single').select2({
                 tags: true,
                 language: {
@@ -127,16 +141,14 @@
         });
     </script>
 
-
-
     <div class="form-group">
         <label for="lawsuit_status">حالة القضية</label>
         <select id="lawsuit_status" name="lawsuit_status" class="form-control">
             <option value="">اختر حالة القضية</option>
-            <option value="انتظار">انتظار</option>
-            <option value="قيد الدراسة">قيد الدراسة</option>
-            <option value="تم التسجيل">تم التسجيل</option>
-            <option value="تم الفصل">تم الفصل</option>
+            <option value="انتظار" {{ old('lawsuit_status', $lawsuit->lawsuit_status ?? '') == 'انتظار' ? 'selected' : '' }}>انتظار</option>
+            <option value="قيد الدراسة" {{ old('lawsuit_status', $lawsuit->lawsuit_status ?? '') == 'قيد الدراسة' ? 'selected' : '' }}>قيد الدراسة</option>
+            <option value="تم التسجيل" {{ old('lawsuit_status', $lawsuit->lawsuit_status ?? '') == 'تم التسجيل' ? 'selected' : '' }}>تم التسجيل</option>
+            <option value="تم الفصل" {{ old('lawsuit_status', $lawsuit->lawsuit_status ?? '') == 'تم الفصل' ? 'selected' : '' }}>تم الفصل</option>
         </select>
     </div>
 
@@ -156,8 +168,7 @@
             var baseNumberGroup = document.getElementById('base_number_group');
             var decisionNumberGroup = document.getElementById('decision_number_group');
 
-            lawsuitStatus.addEventListener('change', function() {
-                var status = this.value;
+            function toggleFields(status) {
                 if (status === 'تم التسجيل') {
                     baseNumberGroup.style.display = 'block';
                     decisionNumberGroup.style.display = 'none';
@@ -168,9 +179,17 @@
                     baseNumberGroup.style.display = 'none';
                     decisionNumberGroup.style.display = 'none';
                 }
+            }
+
+            // Initial check based on existing value
+            toggleFields(lawsuitStatus.value);
+
+            lawsuitStatus.addEventListener('change', function() {
+                toggleFields(this.value);
             });
         });
     </script>
+
 
 
 

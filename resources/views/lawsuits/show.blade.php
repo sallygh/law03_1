@@ -29,15 +29,23 @@
                     </tr>
                     <tr>
                         <th class="align-middle">اسم المدعي</th>
-                        <td class="align-middle">{{ $lawsuit->plaintiff_name }}</td>
+                        <td class="align-middle">{{ $lawsuit->plaintiff->full_name }}</td>
                     </tr>
                     <tr>
                         <th class="align-middle">اسم المدعى عليه</th>
-                        <td class="align-middle">{{ $lawsuit->defendant_name }}</td>
-                    </tr>
+                        <td class="align-middle">{{ $lawsuit->defendant->full_name }}</td>
+
                     <tr>
                         <th class="align-middle">حالة القضية</th>
                         <td class="align-middle">{{ $lawsuit->lawsuit_status }}</td>
+                    </tr>
+                    <tr>
+                        <th class="align-middle"> رقم الاساس</th>
+                        <td class="align-middle">{{ $lawsuit->base_number }}</td>
+                    </tr>
+                    <tr>
+                        <th class="align-middle">رقم القرار </th>
+                        <td class="align-middle">{{ $lawsuit->decision_number }}</td>
                     </tr>
                     <tr>
                         <th class="align-middle">المبلغ المتفق عليه</th>
