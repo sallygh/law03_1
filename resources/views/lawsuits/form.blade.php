@@ -10,68 +10,73 @@
 
 <body class="bg-gray-100 font-cairo">
     <div class="container mx-auto mt-10 bg-white p-8 rounded shadow">
-        <h1 class="text-2xl font-bold mb-4 text-center">تفاصيل القضية</h1>
-        <form>
-            <div class="mb-4">
-                <label for="lawsuit_type" class="block text-gray-700">تصنيف الدعوى</label>
-                <select id="lawsuit_type" name="lawsuit_type" class="block w-full mt-1 border-gray-300 rounded">
-                    <option value="">اختر تصنيف الدعوى</option>
-                    @foreach(array_keys($lawsuitTypes) as $type)
-                    <option value="{{ $type }}" {{ old('lawsuit_type', $lawsuit->lawsuit_type ?? '') == $type ? 'selected' : '' }}>{{ $type }}</option>
+        <h1 class="text-1xl font-bold mb-4 text-center">تفاصيل القضية</h1>
+
+        <div class="mb-4">
+            <label for="lawsuit_type" class="block text-gray-700 text-right mb-2 font-cairo">تصنيف الدعوى</label>
+            <select id="lawsuit_type" name="lawsuit_type" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo" data-lawsuit-types='@json($lawsuitTypes)'>
+                <option value="">اختر تصنيف الدعوى</option>
+                @foreach(array_keys($lawsuitTypes) as $type)
+                <option value="{{ $type }}" {{ old('lawsuit_type', $lawsuit->lawsuit_type ?? '') == $type ? 'selected' : '' }}>{{ $type }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label for="lawsuit_subject" class="block text-gray-700 text-right mb-2 font-cairo">موضوع الدعوى</label>
+            <select id="lawsuit_subject" name="lawsuit_subject" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo">
+                <option value="">اختر موضوع الدعوى</option>
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label for="court" class="block text-gray-700 text-right mb-2 font-cairo">المحكمة</label>
+            <select id="court" name="court" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo">
+                <option value="">اختر المحكمة</option>
+                <option value="دمشق" {{ old('court', $lawsuit->court ?? '') == 'دمشق' ? 'selected' : '' }}>دمشق</option>
+                <option value="ببيلا" {{ old('court', $lawsuit->court ?? '') == 'ببيلا' ? 'selected' : '' }}>ببيلا</option>
+                <option value="داريا" {{ old('court', $lawsuit->court ?? '') == 'داريا' ? 'selected' : '' }}>داريا</option>
+                <option value="جرمانا" {{ old('court', $lawsuit->court ?? '') == 'جرمانا' ? 'selected' : '' }}>جرمانا</option>
+            </select>
+        </div>
+
+
+
+        <div class="mb-4">
+            <label for="court_number" class="block text-gray-700 text-right mb-2 font-cairo">رقم المحكمة</label>
+            <input type="number" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo" id="court_number" name="court_number" min="1" max="20" value="{{ old('court_number', $lawsuit->court_number ?? '') }}">
+        </div>
+
+        <div class="mb-4">
+            <label for="plaintiff_name" class="block text-gray-700 text-right mb-2 font-cairo">اسم المدعي</label>
+            <div class="flex items-center space-x-3">
+                <select name="plaintiff_name" class="js-example-basic-single block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo">
+                    @foreach($clients as $client)
+                    <option value="{{ $client->id }}" {{ old('plaintiff_name', $lawsuit->plaintiff_name ?? '') == $client->id ? 'selected' : '' }}>{{ $client->full_name }}</option>
                     @endforeach
                 </select>
+                <button onclick="window.open('/clients/create', '_blank')" class="ml-2 inline-flex items-center px-4 py-3 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:border-blue-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 font-cairo">إضافة موكل جديد</button>
             </div>
-            <div class="mb-4">
-                <label for="lawsuit_subject" class="block text-gray-700">موضوع الدعوى</label>
-                <select id="lawsuit_subject" name="lawsuit_subject" class="block w-full mt-1 border-gray-300 rounded">
-                    <option value="">اختر موضوع الدعوى</option>
+        </div>
+
+
+
+        <div class="mb-4">
+            <label for="plaintiff_name" class="block text-gray-700 text-right mb-2 font-cairo">اسم المدعي</label>
+            <div class="flex items-center space-x-3">
+                <select name="plaintiff_name" class="js-example-basic-single form-select block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo">
+                    @foreach($clients as $client)
+                    <option value="{{ $client->id }}" {{ old('plaintiff_name', $lawsuit->plaintiff_name ?? '') == $client->id ? 'selected' : '' }}>{{ $client->full_name }}</option>
+                    @endforeach
                 </select>
+                <button onclick="window.open('/clients/create', '_blank')" class="ml-2 inline-flex items-center px-4 py-3 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:border-blue-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 font-cairo">إضافة موكل جديد</button>
             </div>
-
-</body>
-
-<div class="form-group">
-    <label for="court">المحكمة</label>
-    <select id="court" name="court" class="form-control">
-        <option value="">اختر المحكمة</option>
-        <option value="دمشق" {{ old('court', $lawsuit->court ?? '') == 'دمشق' ? 'selected' : '' }}>دمشق</option>
-        <option value="ببيلا" {{ old('court', $lawsuit->court ?? '') == 'ببيلا' ? 'selected' : '' }}>ببيلا</option>
-        <option value="داريا" {{ old('court', $lawsuit->court ?? '') == 'داريا' ? 'selected' : '' }}>داريا</option>
-        <option value="جرمانا" {{ old('court', $lawsuit->court ?? '') == 'جرمانا' ? 'selected' : '' }}>جرمانا</option>
-    </select>
-</div>
+        </div>
 
 
-<div class="form-group">
-    <label for="court_number">رقم المحكمة</label>
-    <input type="number" class="form-control" id="court_number" name="court_number" min="1" max="20" value="{{ old('court_number', $lawsuit->court_number ?? '') }}">
-</div>
-
-<div class="form-group">
-
-
-    <label for="plaintiff_name">اسم المدعي</label>
-    <div style="display: flex; align-items: center;">
-        <select name="plaintiff_name" class="js-example-basic-single">
-            @foreach($clients as $client)
-            <option value="{{ $client->id }}" {{ old('plaintiff_name', $lawsuit->plaintiff_name ?? '') == $client->id ? 'selected' : '' }}>{{ $client->full_name }}</option>
-            @endforeach
-        </select>
-        <button onclick="window.open('/clients/create', '_blank')" style="margin-left: 10px;">إضافة موكل جديد</button>
-    </div>
-
-    <label for="defendant_name">اسم المدعى عليه</label>
-    <div style="display: flex; align-items: center;">
-        <select name="defendant_name" class="js-example-basic-single">
-            @foreach($clients as $client)
-            <option value="{{ $client->id }}" {{ old('defendant_name', $lawsuit->defendant_name ?? '') == $client->id ? 'selected' : '' }}>{{ $client->full_name }}</option>
-            @endforeach
-        </select>
-        <button onclick="window.open('/clients/create', '_blank')" style="margin-left: 10px;">إضافة مدعى عليه جديد</button>
-
-        <div class="form-group">
-            <label for="lawsuit_status">حالة القضية</label>
-            <select id="lawsuit_status" name="lawsuit_status" class="form-control">
+        <div class="mb-4">
+            <label for="lawsuit_status" class="block text-gray-700 text-right mb-2 font-cairo">حالة القضية</label>
+            <select id="lawsuit_status" name="lawsuit_status" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo">
                 <option value="">اختر حالة القضية</option>
                 <option value="انتظار" {{ old('lawsuit_status', $lawsuit->lawsuit_status ?? '') == 'انتظار' ? 'selected' : '' }}>انتظار</option>
                 <option value="قيد الدراسة" {{ old('lawsuit_status', $lawsuit->lawsuit_status ?? '') == 'قيد الدراسة' ? 'selected' : '' }}>قيد الدراسة</option>
@@ -80,109 +85,145 @@
             </select>
         </div>
 
-        <div class="form-group" id="base_number_group" style="display: none;">
-            <label for="base_number">رقم الأساس</label>
-            <input type="number" class="form-control" id="base_number" name="base_number" min="1" max="50000" value="{{ old('base_number', $lawsuit->base_number ?? '') }}">
+        <div class="mb-4" id="base_number_group" style="display: none;">
+            <label for="base_number" class="block text-gray-700 text-right mb-2 font-cairo">رقم الأساس</label>
+            <input type="number" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo" id="base_number" name="base_number" min="1" max="50000" value="{{ old('base_number', $lawsuit->base_number ?? '') }}">
+        </div>
+        <div class="mb-4" id="decision_number_group" style="display: none;">
+            <label for="decision_number" class="block text-gray-700 text-right mb-2 font-cairo">رقم القرار</label>
+            <input type="number" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo" id="decision_number" name="decision_number" min="1" max="50000" value="{{ old('decision_number', $lawsuit->decision_number ?? '') }}">
         </div>
 
-        <div class="form-group" id="decision_number_group" style="display: none;">
-            <label for="decision_number">رقم القرار</label>
-            <input type="number" class="form-control" id="decision_number" name="decision_number" min="1" max="50000" value="{{ old('decision_number', $lawsuit->decision_number ?? '') }}">
 
-            <div class="form-group">
-                <label for="attachments">مرفقات</label>
-                <input type="file" class="form-control" id="attachments" name="attachments[]" multiple>
-            </div>
-            <div class="form-group">
-                <label for="agreed_amount">المبلغ المتفق عليه</label>
-                <input type="number" step="0.01" class="form-control" id="agreed_amount" name="agreed_amount" value="{{ old('agreed_amount', $lawsuit->agreed_amount ?? '') }}">
-            </div>
-            <div class="form-group">
-                <label for="remaining_amount">المبلغ المتبقي</label>
-                <input type="number" step="0.01" class="form-control" id="remaining_amount" name="remaining_amount" value="{{ old('remaining_amount', $lawsuit->remaining_amount ?? '') }}">
-            </div>
-            <div class="form-group">
-                <label for="paid_amount">المبلغ المدفوع</label>
-                <input type="number" step="0.01" class="form-control" id="paid_amount" name="paid_amount" value="{{ old('paid_amount', $lawsuit->paid_amount ?? '') }}">
-            </div>
-            <div class="form-group">
-                <label for="notes">ملاحظات</label>
-                <textarea class="form-control" id="notes" name="notes">{{ old('notes', $lawsuit->notes ?? '') }}"></textarea>
+        <div class="mb-4">
+            <label for="attachments" class="block text-gray-700 text-right mb-2 font-cairo">مرفقات</label>
+            <input type="file" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo" id="attachments" name="attachments[]" multiple>
+        </div>
 
-                <!-- باقي الحقول -->
-                <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">حفظ</button>
-                </form>
-            </div>
-            </body>
+        <div class="mb-4">
+            <label for="agreed_amount" class="block text-gray-700 text-right mb-2 font-cairo">المبلغ المتفق عليه</label>
+            <input type="number" step="0.01" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo" id="agreed_amount" name="agreed_amount" value="{{ old('agreed_amount', $lawsuit->agreed_amount ?? '') }}">
+        </div>
+
+        <div class="mb-4">
+            <label for="remaining_amount" class="block text-gray-700 text-right mb-2 font-cairo">المبلغ المتبقي</label>
+            <input type="number" step="0.01" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo" id="remaining_amount" name="remaining_amount" value="{{ old('remaining_amount', $lawsuit->remaining_amount ?? '') }}">
+        </div>
+
+        <div class="mb-4">
+            <label for="paid_amount" class="block text-gray-700 text-right mb-2 font-cairo">المبلغ المدفوع</label>
+            <input type="number" step="0.01" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo" id="paid_amount" name="paid_amount" value="{{ old('paid_amount', $lawsuit->paid_amount ?? '') }}">
+        </div>
+
+        <div class="mb-4">
+            <label for="notes" class="block text-gray-700 text-right mb-2 font-cairo">ملاحظات</label>
+            <textarea class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo" id="notes" name="notes">{{ old('notes', $lawsuit->notes ?? '') }}</textarea>
+        </div>
 
 
 
-            <!-- كود تصنيف الدعوى -->
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    var lawsuitTypeSelect = document.getElementById('lawsuit_type');
-                    var lawsuitTypes = JSON.parse(lawsuitTypeSelect.getAttribute('data-lawsuit-types'));
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var lawsuitTypeSelect = document.getElementById('lawsuit_type');
+                var lawsuitTypes = JSON.parse(lawsuitTypeSelect.getAttribute('data-lawsuit-types'));
 
-                    // استخراج قيمة الموضوع من Blade بشكل آمن
-                    var initialSubject = "{{ old('lawsuit_subject', $lawsuit->lawsuit_subject ?? '') }}";
+                // استخراج قيمة الموضوع من Blade بشكل آمن
+                var initialSubject = "{{ old('lawsuit_subject', $lawsuit->lawsuit_subject ?? '') }}";
 
-                    function updateLawsuitSubjects(selectedType) {
-                        var subjects = lawsuitTypes[selectedType] || [];
-                        var subjectSelect = document.getElementById('lawsuit_subject');
-                        subjectSelect.innerHTML = '<option value="">اختر موضوع الدعوى</option>';
-                        subjects.forEach(function(subject) {
-                            var option = document.createElement('option');
-                            option.value = subject;
-                            option.text = subject;
-                            if (subject === initialSubject) {
-                                option.selected = true;
-                            }
-                            subjectSelect.appendChild(option);
-                        });
-                    }
-
-                    updateLawsuitSubjects(lawsuitTypeSelect.value); // استدعاء الوظيفة لملء موضوع الدعوى بناءً على القيمة الحالية
-
-                    lawsuitTypeSelect.addEventListener('change', function() {
-                        updateLawsuitSubjects(this.value);
+                function updateLawsuitSubjects(selectedType) {
+                    var subjects = lawsuitTypes[selectedType] || [];
+                    var subjectSelect = document.getElementById('lawsuit_subject');
+                    subjectSelect.innerHTML = '<option value="">اختر موضوع الدعوى</option>';
+                    subjects.forEach(function(subject) {
+                        var option = document.createElement('option');
+                        option.value = subject;
+                        option.text = subject;
+                        if (subject === initialSubject) {
+                            option.selected = true;
+                        }
+                        subjectSelect.appendChild(option);
                     });
-                });
-            </script>
-            <!-- كود اسم المدعي -->
-            <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-            <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-            <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-        </div>
-
-    </div>
-    <!--  كود إظهار وإخفاء زر رقم القرار والاساس -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var lawsuitStatus = document.getElementById('lawsuit_status');
-            var baseNumberGroup = document.getElementById('base_number_group');
-            var decisionNumberGroup = document.getElementById('decision_number_group');
-
-            function toggleFields(status) {
-                if (status === 'تم التسجيل') {
-                    baseNumberGroup.style.display = 'block';
-                    decisionNumberGroup.style.display = 'none';
-                } else if (status === 'تم الفصل') {
-                    baseNumberGroup.style.display = 'block';
-                    decisionNumberGroup.style.display = 'block';
-                } else {
-                    baseNumberGroup.style.display = 'none';
-                    decisionNumberGroup.style.display = 'none';
                 }
-            }
 
-            // Initial check based on existing value
-            toggleFields(lawsuitStatus.value);
+                updateLawsuitSubjects(lawsuitTypeSelect.value); // استدعاء الوظيفة لملء موضوع الدعوى بناءً على القيمة الحالية
 
-            lawsuitStatus.addEventListener('change', function() {
-                toggleFields(this.value);
+                lawsuitTypeSelect.addEventListener('change', function() {
+                    updateLawsuitSubjects(this.value);
+                });
             });
-        });
-    </script>
-</div>
+        </script>
+        <script>
+            $(document).ready(function() {
+                function createOption(term) {
+                    var option = new Option(term, term, true, true);
+                    return option;
+                }
+                $('.js-example-basic-single').select2({
+                    tags: true,
+                    language: {
+                        noResults: function() {
+                            return ''; // حذف الرسالة المخصصة
+                        }
+                    },
+                    escapeMarkup: function(markup) {
+                        return markup;
+                    },
+                    createTag: function(params) {
+                        var term = $.trim(params.term);
+                        if (term === '') {
+                            return null;
+                        }
+                        return {
+                            id: term,
+                            text: term,
+                            newOption: true
+                        };
+                    },
+                    templateResult: function(data) {
+                        return $('<span>').text(data.text);
+                    }
+                });
 
-</html>
+                // إضافة خيار "أضف موكل جديد" كبند مستقل
+                $('.js-example-basic-single').append('<option value="add_new">أضف موكل جديد</option>');
+
+                // تحديد السلوك عند اختيار "أضف موكل جديد"
+                $('.js-example-basic-single').on('select2:select', function(e) {
+                    if (e.params.data.id === 'add_new') {
+                        window.open('/clients/create', '_blank');
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var lawsuitStatus = document.getElementById('lawsuit_status');
+                var baseNumberGroup = document.getElementById('base_number_group');
+                var decisionNumberGroup = document.getElementById('decision_number_group');
+
+                function toggleFields(status) {
+                    if (status === 'تم التسجيل') {
+                        baseNumberGroup.style.display = 'block';
+                        decisionNumberGroup.style.display = 'none';
+                    } else if (status === 'تم الفصل') {
+                        baseNumberGroup.style.display = 'block';
+                        decisionNumberGroup.style.display = 'block';
+                    } else {
+                        baseNumberGroup.style.display = 'none';
+                        decisionNumberGroup.style.display = 'none';
+                    }
+                }
+
+                // Initial check based on existing value
+                toggleFields(lawsuitStatus.value);
+
+                lawsuitStatus.addEventListener('change', function() {
+                    toggleFields(this.value);
+                });
+            });
+        </script>
+</body>
