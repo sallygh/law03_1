@@ -62,16 +62,17 @@
 
 
         <div class="mb-4">
-            <label for="plaintiff_name" class="block text-gray-700 text-right mb-2 font-cairo">اسم المدعي</label>
+            <label for="defendant_name" class="block text-gray-700 text-right mb-2 font-cairo">اسم المدعى عليه</label>
             <div class="flex items-center space-x-3">
-                <select name="plaintiff_name" class="js-example-basic-single form-select block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo">
+                <select name="defendant_name" class="js-example-basic-single form-select block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo">
                     @foreach($clients as $client)
-                    <option value="{{ $client->id }}" {{ old('plaintiff_name', $lawsuit->plaintiff_name ?? '') == $client->id ? 'selected' : '' }}>{{ $client->full_name }}</option>
+                    <option value="{{ $client->id }}" {{ old('defendant_name', $lawsuit->defendant_name ?? '') == $client->id ? 'selected' : '' }}>{{ $client->full_name }}</option>
                     @endforeach
                 </select>
                 <button onclick="window.open('/clients/create', '_blank')" class="ml-2 inline-flex items-center px-4 py-3 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:border-blue-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 font-cairo">إضافة موكل جديد</button>
             </div>
         </div>
+
 
 
         <div class="mb-4">

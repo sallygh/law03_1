@@ -10,9 +10,33 @@ use App\Model;
 
 class LawsuitController extends Controller
 {
-    public function index()
+
+
+
+    public function index(Request $request)
     {
         $lawsuits = Lawsuit::all();
+        $query = $request->input('query');
+
+        if ($query) {
+            $lawsuits = Lawsuit::where('lawsuit_type', 'LIKE', "%{$query}%")
+                ->orWhere('lawsuit_subject', 'LIKE', "%{$query}%")
+                ->orWhere('court', 'LIKE', "%{$query}%")
+                ->orWhere('court_number', 'LIKE', "%{$query}%")
+                ->orWhere('plaintiff_name', 'LIKE', "%{$query}%")
+                ->orWhere('defendant_name', 'LIKE', "%{$query}%")
+                ->orWhere('lawsuit_status', 'LIKE', "%{$query}%")
+                ->orWhere('base_number', 'LIKE', "%{$query}%")
+                ->orWhere('decision_number', 'LIKE', "%{$query}%")
+                ->orWhere('agreed_amount', 'LIKE', "%{$query}%")
+                ->orWhere('remaining_amount', 'LIKE', "%{$query}%")
+                ->orWhere('paid_amount', 'LIKE', "%{$query}%")
+                ->orWhere('notes', 'LIKE', "%{$query}%")
+                ->paginate(10);
+        } else {
+            $lawsuits = Lawsuit::paginate(10);
+        }
+
         return view('lawsuits.index', compact('lawsuits'));
     }
     public function create()
@@ -53,6 +77,9 @@ class LawsuitController extends Controller
             'notes' => 'nullable|string',
         ]);
 
+
+
+
         // حفظ المرفقات إذا كانت موجودة
         if ($request->hasFile('attachments')) {
             $attachments = [];
@@ -64,10 +91,13 @@ class LawsuitController extends Controller
         }
 
         // إنشاء القضية
-        Lawsuit::create($validatedData);
 
         // إرجاع رد مع نجاح العملية
-        return redirect()->route('lawsuits.index')->with('success', 'تم إضافة القضية بنجاح');
+        // قم بحفظ البيانات في قاعدة البيانات
+        Lawsuit::create($validatedData);
+
+        // إعادة التوجيه أو عرض رسالة نجاح
+        return redirect()->route('lawsuits.index')->with('success', 'تم إنشاء القضية بنجاح');
     }
 
 

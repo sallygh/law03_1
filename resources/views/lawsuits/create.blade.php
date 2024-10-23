@@ -8,5 +8,6 @@
         @include('lawsuits.form')
         <button type="submit" class="btn btn-primary mt-3">حفظ</button>
     </form>
+
 </div>
 @endsection
