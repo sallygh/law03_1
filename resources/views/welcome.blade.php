@@ -32,32 +32,8 @@
             max-width: 1000px;
             margin: 20px auto;
             padding: 20px;
-            background: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .cta-button {
-            display: inline-block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background: #4A90E2;
-            color: #fff;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: background 0.3s;
-        }
-
-        .cta-button:hover {
-            background: #357ABD;
-        }
-
-        .footer {
-            text-align: center;
-            padding: 20px 0;
-            background: #f7f7f7;
-            margin-top: 40px;
-            border-top: 1px solid #ddd;
         }
     </style>
 </head>
@@ -75,7 +51,6 @@
             <a href="{{ route('register') }}" class="cta-button">التسجيل</a>
         </div>
     </div>
-
     <footer class="footer">
         <p>حقوق الطبع والنشر © 2023 - إدارة القضايا القانونية</p>
     </footer>
