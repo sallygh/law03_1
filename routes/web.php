@@ -19,8 +19,5 @@ Route::middleware([
 });
 
 
-
-
-
 Route::resource('clients', ClientController::class);
 Route::resource('lawsuits', LawsuitController::class);
