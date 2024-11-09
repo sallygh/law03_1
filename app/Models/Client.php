@@ -16,7 +16,6 @@ class Client extends Model
         'notes',
     ];
 
-
     public function lawsuits()
     {
         return $this->hasMany(Lawsuit::class);

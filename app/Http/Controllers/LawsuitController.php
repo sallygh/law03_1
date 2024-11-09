@@ -6,7 +6,7 @@ use App\Models\Client;
 use App\Models\Lawsuit;
 use Illuminate\Http\Request;
 use App\Model;
-
+use Illuminate\Support\Facades\Auth;
 
 class LawsuitController extends Controller
 {
@@ -15,30 +15,43 @@ class LawsuitController extends Controller
 
     public function index(Request $request)
     {
-        $lawsuits = Lawsuit::all();
         $query = $request->input('query');
+        $user = Auth::user();
+        $lawsuitsQuery = Lawsuit::query();
 
-        if ($query) {
-            $lawsuits = Lawsuit::where('lawsuit_type', 'LIKE', "%{$query}%")
-                ->orWhere('lawsuit_subject', 'LIKE', "%{$query}%")
-                ->orWhere('court', 'LIKE', "%{$query}%")
-                ->orWhere('court_number', 'LIKE', "%{$query}%")
-                ->orWhere('plaintiff_name', 'LIKE', "%{$query}%")
-                ->orWhere('defendant_name', 'LIKE', "%{$query}%")
-                ->orWhere('lawsuit_status', 'LIKE', "%{$query}%")
-                ->orWhere('base_number', 'LIKE', "%{$query}%")
-                ->orWhere('decision_number', 'LIKE', "%{$query}%")
-                ->orWhere('agreed_amount', 'LIKE', "%{$query}%")
-                ->orWhere('remaining_amount', 'LIKE', "%{$query}%")
-                ->orWhere('paid_amount', 'LIKE', "%{$query}%")
-                ->orWhere('notes', 'LIKE', "%{$query}%")
-                ->paginate(10);
-        } else {
-            $lawsuits = Lawsuit::paginate(10);
+        // إضافة تصفية القضايا الخاصة بالمستخدم الحالي
+        $lawsuitsQuery->where('user_id', $user->id);
+
+        // إضافة تصفية القضايا الخاصة بالفريق الحالي (إذا كان المستخدم ينتمي لفريق)
+        if ($user->currentTeam) {
+            $lawsuitsQuery->orWhere('team_id', $user->currentTeam->id);
         }
+
+        // إضافة شروط البحث إذا كانت هناك استعلامات
+        if ($query) {
+            $lawsuitsQuery->where(function ($q) use ($query) {
+                $q->where('lawsuit_type', 'LIKE', "%{$query}%")
+                    ->orWhere('lawsuit_subject', 'LIKE', "%{$query}%")
+                    ->orWhere('court', 'LIKE', "%{$query}%")
+                    ->orWhere('court_number', 'LIKE', "%{$query}%")
+                    ->orWhere('plaintiff_name', 'LIKE', "%{$query}%")
+                    ->orWhere('defendant_name', 'LIKE', "%{$query}%")
+                    ->orWhere('lawsuit_status', 'LIKE', "%{$query}%")
+                    ->orWhere('base_number', 'LIKE', "%{$query}%")
+                    ->orWhere('decision_number', 'LIKE', "%{$query}%")
+                    ->orWhere('agreed_amount', 'LIKE', "%{$query}%")
+                    ->orWhere('remaining_amount', 'LIKE', "%{$query}%")
+                    ->orWhere('paid_amount', 'LIKE', "%{$query}%")
+                    ->orWhere('notes', 'LIKE', "%{$query}%");
+            });
+        }
+
+        // استخدام التصفيّة والنماذج
+        $lawsuits = $lawsuitsQuery->paginate(10);
 
         return view('lawsuits.index', compact('lawsuits'));
     }
+
     public function create()
     {
         $lawsuitTypes = [
@@ -95,7 +108,11 @@ class LawsuitController extends Controller
         // إرجاع رد مع نجاح العملية
         // قم بحفظ البيانات في قاعدة البيانات
         Lawsuit::create($validatedData);
-
+        $user = Auth::user();
+        $lawsuit = new Lawsuit($request->all());
+        $lawsuit->user_id = $user->id;
+        $lawsuit->team_id = $user->currentTeam ? $user->currentTeam->id : null;
+        $lawsuit->save();
         // إعادة التوجيه أو عرض رسالة نجاح
         return redirect()->route('lawsuits.index')->with('success', 'تم إنشاء القضية بنجاح');
     }
@@ -156,7 +173,11 @@ class LawsuitController extends Controller
 
         // تحديث القضية
         $lawsuit->update($validatedData);
-
+        $user = Auth::user();
+        $lawsuit->fill($request->all());
+        $lawsuit->user_id = $user->id;
+        $lawsuit->team_id = $user->currentTeam ? $user->currentTeam->id : null;
+        $lawsuit->save();
         // إرجاع رد مع نجاح العملية
         return redirect()->route('lawsuits.index')->with('success', 'تم تحديث القضية بنجاح');
     }

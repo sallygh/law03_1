@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Lawsuit extends Model
 {
@@ -24,14 +25,15 @@ class Lawsuit extends Model
         'notes',
         'base_number',
         'decision_number',
-
+        'user_id',   // إضافة user_id
+        'team_id'    // إضافة team_id
     ];
 
     protected $casts = [
         'attachments' => 'array',
     ];
 
-
+    // العلاقات مع النماذج الأخرى
     public function client()
     {
         return $this->belongsTo(Client::class);
@@ -45,5 +47,24 @@ class Lawsuit extends Model
     public function defendant()
     {
         return $this->belongsTo(Client::class, 'defendant_name');
+    }
+
+    // علاقة مع الفريق
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    }
+
+    // نطاق الاستعلام لتصفية القضايا حسب المستخدم الحالي
+    public function scopeUserLawsuits($query)
+    {
+        return $query->where('user_id', Auth::id());
+    }
+
+    // نطاق الاستعلام لتصفية القضايا حسب الفريق الحالي
+    public function scopeTeamLawsuits($query)
+    {
+        $teamId = Auth::user()->currentTeam->id;
+        return $query->where('team_id', $teamId);
     }
 }
