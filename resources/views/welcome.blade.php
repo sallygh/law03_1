@@ -67,7 +67,8 @@
 <body>
     <div class="content">
         <h1 class="text-4xl font-bold text-white mb-4"> موقع إدارة القضايا القانونية</h1>
-        <p>نحن نوفر أفضل الخدمات القانونية لإدارة قضاياكم بكفاءة واحترافية. يمكنكم تسجيل الدخول أو التسجيل لبدء استخدام خدماتنا .</p>
+        <p>نحن نوفر أفضل الخدمات القانونية لإدارة قضاياكم بكفاءة واحترافية.
+        <p></p>يمكنكم تسجيل الدخول أو التسجيل لبدء استخدام خدماتنا .</p>
         <div class="flex justify-center space-x-4">
             <a href="{{ route('login') }}" class="cta-button">تسجيل الدخول</a>
             <a href="{{ route('register') }}" class="cta-button">التسجيل</a>
