@@ -109,9 +109,11 @@ class LawsuitController extends Controller
         // قم بحفظ البيانات في قاعدة البيانات
         Lawsuit::create($validatedData);
         $user = Auth::user();
+        $nextCaseNumber = Lawsuit::where('user_id', $user->id)->max('user_case_number') + 1;
         $lawsuit = new Lawsuit($request->all());
         $lawsuit->user_id = $user->id;
         $lawsuit->team_id = $user->currentTeam ? $user->currentTeam->id : null;
+        $lawsuit->user_case_number = $nextCaseNumber;
         $lawsuit->save();
         // إعادة التوجيه أو عرض رسالة نجاح
         return redirect()->route('lawsuits.index')->with('success', 'تم إنشاء القضية بنجاح');

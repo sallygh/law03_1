@@ -14,7 +14,8 @@
     <table class="table-auto w-full border-collapse bg-white shadow-md rounded overflow-hidden">
         <thead class="bg-gray-800 text-white font-cairo">
             <tr>
-                <th class="p-3 text-center">رقم القضية</th>
+
+                <th class="p-3 text-center">رقم الدعوى </th> <!-- عمود ترقيم المستخدم -->
                 <th class="p-3 text-center">تصنيف الدعوى</th>
                 <th class="p-3 text-center">موضوع الدعوى</th>
                 <th class="p-3 text-center">المحكمة</th>
@@ -27,7 +28,8 @@
         <tbody class="font-cairo">
             @foreach($lawsuits as $lawsuit)
             <tr class="border-b hover:bg-gray-100">
-                <td class="p-3 text-center">{{ $lawsuit->id }}</td>
+
+                <td class="p-3 text-center">{{ $lawsuit->user_case_number }}</td> <!-- عرض ترقيم المستخدم -->
                 <td class="p-3 text-center">{{ $lawsuit->lawsuit_type }}</td>
                 <td class="p-3 text-center">{{ $lawsuit->lawsuit_subject }}</td>
                 <td class="p-3 text-center">{{ $lawsuit->court }}</td>

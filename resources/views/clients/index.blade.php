@@ -7,7 +7,8 @@
     <table class="table">
         <thead>
             <tr>
-                <th>رقم</th>
+
+                <th> رقم </th> <!-- عمود ترقيم المستخدم -->
                 <th>الاسم الثلاثي</th>
                 <th>رقم الهاتف</th>
                 <th>العنوان</th>
@@ -17,7 +18,8 @@
         <tbody>
             @foreach($clients as $client)
             <tr>
-                <td>{{ $client->id }}</td>
+
+                <td>{{ $client->user_client_number }}</td> <!-- عرض ترقيم المستخدم -->
                 <td>{{ $client->full_name }}</td>
                 <td>{{ $client->phone }}</td>
                 <td>{{ $client->address }}</td>
@@ -34,5 +36,8 @@
             @endforeach
         </tbody>
     </table>
+
+    <!-- عرض روابط التصفية -->
+    {{ $clients->appends(request()->input())->links() }}
 </div>
 @endsection

@@ -14,10 +14,23 @@ class Client extends Model
         'phone',
         'address',
         'notes',
+        'user_id',    // إضافة user_id
+        'team_id',   // إضافة team_id
+        'user_client_number' // إضافة user_client_number
     ];
 
     public function lawsuits()
     {
         return $this->hasMany(Lawsuit::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
     }
 }

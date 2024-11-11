@@ -10,24 +10,7 @@ class Lawsuit extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'lawsuit_type',
-        'lawsuit_subject',
-        'court',
-        'court_number',
-        'plaintiff_name',
-        'defendant_name',
-        'lawsuit_status',
-        'attachments',
-        'agreed_amount',
-        'remaining_amount',
-        'paid_amount',
-        'notes',
-        'base_number',
-        'decision_number',
-        'user_id',   // إضافة user_id
-        'team_id'    // إضافة team_id
-    ];
+    protected $fillable = ['lawsuit_type', 'lawsuit_subject', 'court', 'court_number', 'plaintiff_name', 'defendant_name', 'lawsuit_status', 'attachments', 'agreed_amount', 'remaining_amount', 'paid_amount', 'notes', 'base_number', 'decision_number', 'user_id', 'team_id', 'user_case_number'];
 
     protected $casts = [
         'attachments' => 'array',
