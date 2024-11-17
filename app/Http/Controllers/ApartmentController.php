@@ -12,6 +12,8 @@ class ApartmentController extends Controller
     {
         return view('apartments.create');
     }
+
+
     public function store(Request $request)
     {
         $request->validate([
@@ -32,11 +34,15 @@ class ApartmentController extends Controller
 
         // تحقق من المصدر وأعد التوجيه بناءً عليه
         if ($request->input('source') === 'direct') {
-            return redirect()->route('lawsuits.create')->with('success', 'تم إنشاء الشقة بنجاح. الرجاء استكمال تفاصيل القضية.');
+            // استرجاع البيانات من الجلسة
+            $lawsuitData = json_decode($request->session()->get('lawsuitData'), true);
+            // إعادة توجيه المستخدم إلى نموذج القضية مع البيانات المسترجعة
+            return redirect()->route('lawsuits.create')->withInput($lawsuitData)->with('success', 'تم إنشاء الشقة بنجاح. الرجاء استكمال تفاصيل القضية.');
         }
 
         return redirect()->route('apartments.index')->with('success', 'تم إنشاء الشقة بنجاح.');
     }
+
 
 
     public function show(Apartment $apartment)

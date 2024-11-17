@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Lawsuit;
 
 class Apartment extends Model
 {
@@ -21,10 +22,4 @@ class Apartment extends Model
         'notes',
         'attachments'
     ];
-
-    // علاقة مع القضايا
-    public function lawsuits()
-    {
-        return $this->hasMany(Lawsuit::class);
-    }
 }

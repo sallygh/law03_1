@@ -22,7 +22,7 @@
         <div class="mb-4">
             <label for="lawsuit_type" class="block text-gray-700 text-right mb-2 font-cairo">تصنيف الدعوى</label>
             <select id="lawsuit_type" name="lawsuit_type" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo" data-lawsuit-types='@json($lawsuitTypes)'>
-                <option value="">اختر تصنيف الدعوى</option>
+
                 @foreach(array_keys($lawsuitTypes) as $type)
                 <option value="{{ $type }}" {{ old('lawsuit_type', $lawsuit->lawsuit_type ?? '') == $type ? 'selected' : '' }}>{{ $type }}</option>
                 @endforeach
@@ -33,7 +33,7 @@
         <div class="mb-4">
             <label for="lawsuit_subject" class="block text-gray-700 text-right mb-2 font-cairo">موضوع الدعوى</label>
             <select id="lawsuit_subject" name="lawsuit_subject" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo">
-                <option value="">اختر موضوع الدعوى</option>
+
             </select>
         </div>
 
@@ -154,7 +154,7 @@
 
                 function updateLawsuitSubjects(selectedType) {
                     var subjects = lawsuitTypes[selectedType] || [];
-                    lawsuitSubjectSelect.innerHTML = '<option value="">اختر موضوع الدعوى</option>';
+                    lawsuitSubjectSelect.innerHTML = ' ';
                     subjects.forEach(function(subject) {
                         var option = document.createElement('option');
                         option.value = subject;
@@ -273,5 +273,21 @@
             });
         </script>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var lawsuitForm = document.getElementById('lawsuitForm');
+
+                // استرجاع البيانات من الجلسة عند تحميل الصفحة
+                var lawsuitData = JSON.parse(sessionStorage.getItem('lawsuitData'));
+                if (lawsuitData) {
+                    for (var key in lawsuitData) {
+                        var input = document.querySelector(`[name="${key}"]`);
+                        if (input) {
+                            input.value = lawsuitData[key];
+                        }
+                    }
+                }
+            });
+        </script>
 
 </body>

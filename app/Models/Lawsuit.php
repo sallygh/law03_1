@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,27 +11,12 @@ class Lawsuit extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['lawsuit_type', 'lawsuit_subject', 'court', 'court_number', 'plaintiff_name', 'defendant_name', 'lawsuit_status', 'attachments', 'agreed_amount', 'remaining_amount', 'paid_amount', 'notes', 'base_number', 'decision_number', 'user_id', 'team_id', 'user_case_number', 'apartment_id'];
+    protected $fillable = ['lawsuit_type', 'lawsuit_subject', 'court', 'court_number', 'plaintiff_name', 'defendant_name', 'lawsuit_status', 'attachments', 'agreed_amount', 'remaining_amount', 'paid_amount', 'notes', 'base_number', 'decision_number', 'user_id', 'team_id', 'user_case_number', 'apartment_id', 'client_id'];
 
     protected $casts = [
         'attachments' => 'array',
     ];
 
-    // العلاقات مع النماذج الأخرى
-    public function client()
-    {
-        return $this->belongsTo(Client::class);
-    }
-
-    public function plaintiff()
-    {
-        return $this->belongsTo(Client::class, 'plaintiff_name');
-    }
-
-    public function defendant()
-    {
-        return $this->belongsTo(Client::class, 'defendant_name');
-    }
 
     // علاقة مع الفريق
     public function team()
@@ -50,9 +36,21 @@ class Lawsuit extends Model
         $teamId = Auth::user()->currentTeam->id;
         return $query->where('team_id', $teamId);
     }
+
     // علاقة مع الشقق
     public function apartment()
     {
         return $this->belongsTo(Apartment::class);
+    }
+
+    public function apartments()
+    {
+        return $this->hasMany(Apartment::class);
+    }
+
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
     }
 }

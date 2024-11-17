@@ -9,6 +9,22 @@
         <button type="submit" class="btn btn-primary mt-3">حفظ</button>
     </form>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var lawsuitForm = document.getElementById('lawsuitForm');
+
+            // حفظ البيانات في الجلسة عند النقر على زر "تفاصيل"
+            document.getElementById('detailsButton').addEventListener('click', function() {
+                var formData = new FormData(lawsuitForm);
+                var lawsuitData = {};
+                formData.forEach(function(value, key) {
+                    lawsuitData[key] = value;
+                });
+                sessionStorage.setItem('lawsuitData', JSON.stringify(lawsuitData));
+                location.href = '/apartments/create?source=lawsuit';
+            });
+        });
+    </script>
 
 </div>
 @endsection

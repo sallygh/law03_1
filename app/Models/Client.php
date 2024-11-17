@@ -8,17 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Client extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'full_name',
-        'phone',
-        'address',
-        'notes',
-        'user_id',    // إضافة user_id
-        'team_id',   // إضافة team_id
-        'user_client_number' // إضافة user_client_number
-    ];
-
+    protected $fillable = ['full_name', 'phone', 'address', 'notes', 'user_id', 'team_id', 'user_client_number'];
     public function lawsuits()
     {
         return $this->hasMany(Lawsuit::class);
