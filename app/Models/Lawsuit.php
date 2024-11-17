@@ -10,7 +10,7 @@ class Lawsuit extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['lawsuit_type', 'lawsuit_subject', 'court', 'court_number', 'plaintiff_name', 'defendant_name', 'lawsuit_status', 'attachments', 'agreed_amount', 'remaining_amount', 'paid_amount', 'notes', 'base_number', 'decision_number', 'user_id', 'team_id', 'user_case_number'];
+    protected $fillable = ['lawsuit_type', 'lawsuit_subject', 'court', 'court_number', 'plaintiff_name', 'defendant_name', 'lawsuit_status', 'attachments', 'agreed_amount', 'remaining_amount', 'paid_amount', 'notes', 'base_number', 'decision_number', 'user_id', 'team_id', 'user_case_number', 'apartment_id'];
 
     protected $casts = [
         'attachments' => 'array',
@@ -49,5 +49,10 @@ class Lawsuit extends Model
     {
         $teamId = Auth::user()->currentTeam->id;
         return $query->where('team_id', $teamId);
+    }
+    // علاقة مع الشقق
+    public function apartment()
+    {
+        return $this->belongsTo(Apartment::class);
     }
 }

@@ -12,6 +12,13 @@
     <div class="container mx-auto mt-10 bg-white p-8 rounded shadow">
         <h1 class="text-1xl font-bold mb-4 text-center">تفاصيل القضية</h1>
 
+        @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+        @endif
+
+        <!-- تصنيف الدعوى -->
         <div class="mb-4">
             <label for="lawsuit_type" class="block text-gray-700 text-right mb-2 font-cairo">تصنيف الدعوى</label>
             <select id="lawsuit_type" name="lawsuit_type" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo" data-lawsuit-types='@json($lawsuitTypes)'>
@@ -22,12 +29,18 @@
             </select>
         </div>
 
+        <!-- موضوع الدعوى -->
         <div class="mb-4">
             <label for="lawsuit_subject" class="block text-gray-700 text-right mb-2 font-cairo">موضوع الدعوى</label>
             <select id="lawsuit_subject" name="lawsuit_subject" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo">
                 <option value="">اختر موضوع الدعوى</option>
             </select>
         </div>
+
+        <!-- زر التفاصيل -->
+        <button id="details_button" type="button" class="btn btn-info mt-2">تفاصيل</button>
+
+
 
         <div class="mb-4">
             <label for="court" class="block text-gray-700 text-right mb-2 font-cairo">المحكمة</label>
@@ -126,18 +139,22 @@
         <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 var lawsuitTypeSelect = document.getElementById('lawsuit_type');
                 var lawsuitTypes = JSON.parse(lawsuitTypeSelect.getAttribute('data-lawsuit-types'));
+                var lawsuitSubjectSelect = document.getElementById('lawsuit_subject');
+                var detailsButton = document.getElementById('details_button');
 
                 // استخراج قيمة الموضوع من Blade بشكل آمن
                 var initialSubject = "{{ old('lawsuit_subject', $lawsuit->lawsuit_subject ?? '') }}";
 
                 function updateLawsuitSubjects(selectedType) {
                     var subjects = lawsuitTypes[selectedType] || [];
-                    var subjectSelect = document.getElementById('lawsuit_subject');
-                    subjectSelect.innerHTML = '<option value="">اختر موضوع الدعوى</option>';
+                    lawsuitSubjectSelect.innerHTML = '<option value="">اختر موضوع الدعوى</option>';
                     subjects.forEach(function(subject) {
                         var option = document.createElement('option');
                         option.value = subject;
@@ -145,17 +162,45 @@
                         if (subject === initialSubject) {
                             option.selected = true;
                         }
-                        subjectSelect.appendChild(option);
+                        lawsuitSubjectSelect.appendChild(option);
                     });
                 }
 
-                updateLawsuitSubjects(lawsuitTypeSelect.value); // استدعاء الوظيفة لملء موضوع الدعوى بناءً على القيمة الحالية
+                function updateDetailsButtonLink(selectedSubject) {
+                    var url = '';
 
+                    switch (selectedSubject) {
+                        case 'بيع شقة':
+                            url = '/apartments/create';
+                            break;
+                        case 'بيع سيارة':
+                            url = '/cars/create';
+                            break;
+                        default:
+                            url = '#'; // يمكنك تعيين رابط افتراضي إذا لم يكن هناك موضوع محدد
+                            break;
+                    }
+
+                    detailsButton.setAttribute('onclick', `location.href='${url}'`);
+                }
+
+                // استدعاء الوظيفة لملء موضوع الدعوى بناءً على القيمة الحالية
+                updateLawsuitSubjects(lawsuitTypeSelect.value);
+                updateDetailsButtonLink(lawsuitSubjectSelect.value);
+
+                // تحديث الرابط عند تغيير القيمة
                 lawsuitTypeSelect.addEventListener('change', function() {
                     updateLawsuitSubjects(this.value);
+                    updateDetailsButtonLink(lawsuitSubjectSelect.value);
+                });
+
+                lawsuitSubjectSelect.addEventListener('change', function() {
+                    updateDetailsButtonLink(this.value);
                 });
             });
         </script>
+
+
         <script>
             $(document).ready(function() {
                 function createOption(term) {
@@ -227,4 +272,6 @@
                 });
             });
         </script>
+
+
 </body>

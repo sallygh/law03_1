@@ -1,7 +1,9 @@
 <?php
 
+
 use App\Http\Controllers\LawsuitController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ApartmentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -21,3 +23,8 @@ Route::middleware([
 
 Route::resource('clients', ClientController::class);
 Route::resource('lawsuits', LawsuitController::class);
+
+
+Route::resource('apartments', ApartmentController::class);
+
+Route::get('/get-lawsuit-subjects/{type}', [LawsuitController::class, 'getSubjects'])->name('get-lawsuit-subjects');
