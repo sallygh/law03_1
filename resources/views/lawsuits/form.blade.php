@@ -203,33 +203,15 @@
 
         <script>
             $(document).ready(function() {
-                function createOption(term) {
-                    var option = new Option(term, term, true, true);
-                    return option;
-                }
                 $('.js-example-basic-single').select2({
-                    tags: true,
+                    tags: false, // منع إضافة موكل جديد مباشرة
                     language: {
                         noResults: function() {
-                            return ''; // حذف الرسالة المخصصة
+                            return '<option value="add_new">أضف موكل جديد</option>'; // رسالة مخصصة عند عدم وجود نتائج
                         }
                     },
                     escapeMarkup: function(markup) {
                         return markup;
-                    },
-                    createTag: function(params) {
-                        var term = $.trim(params.term);
-                        if (term === '') {
-                            return null;
-                        }
-                        return {
-                            id: term,
-                            text: term,
-                            newOption: true
-                        };
-                    },
-                    templateResult: function(data) {
-                        return $('<span>').text(data.text);
                     }
                 });
 
@@ -244,6 +226,8 @@
                 });
             });
         </script>
+
+
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {

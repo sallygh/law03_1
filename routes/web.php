@@ -28,3 +28,8 @@ Route::resource('lawsuits', LawsuitController::class);
 Route::resource('apartments', ApartmentController::class);
 
 Route::get('/get-lawsuit-subjects/{type}', [LawsuitController::class, 'getSubjects'])->name('get-lawsuit-subjects');
+Route::get('/clients/list', [ClientController::class, 'list']);
+
+
+
+Route::post('/clients', [ClientController::class, 'store']);

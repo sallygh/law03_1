@@ -48,23 +48,24 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'full_name' => 'required|string',
-            'phone' => 'required|string',
-            'address' => 'required|string',
+            'full_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
             'notes' => 'nullable|string',
         ]);
 
-        Client::create($validatedData);
-
         $user = Auth::user();
         $nextClientNumber = Client::where('user_id', $user->id)->max('user_client_number') + 1;
-        $client = new Client($request->all());
+
+        $client = new Client($validatedData);
         $client->user_id = $user->id;
         $client->team_id = $user->currentTeam ? $user->currentTeam->id : null;
         $client->user_client_number = $nextClientNumber;
         $client->save();
-        return redirect()->route('clients.index');
+
+        return response()->json(['success' => true, 'client' => $client]);
     }
+
 
     public function show(Client $client)
     {
@@ -98,5 +99,12 @@ class ClientController extends Controller
     {
         $client->delete();
         return redirect()->route('clients.index');
+    }
+
+
+    public function list()
+    {
+        $clients = Client::all();
+        return response()->json(['clients' => $clients]);
     }
 }
