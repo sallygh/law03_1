@@ -10,13 +10,19 @@
 
 <body class="bg-gray-100 font-cairo">
     <div class="container mx-auto mt-10 bg-white p-8 rounded shadow">
-        <h1 class="text-1xl font-bold mb-4 text-center">تفاصيل القضية</h1>
+        <h1 class="text-1xl font-bold mb-4 text-center">معلومات القضية</h1>
 
         @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
         @endif
+
+
+        <div class="mb-4">
+            <label for="lawusti_id" class="block text-gray-700 text-right mb-2 font-cairo">رقم القضية الحالية:</label>
+            <span id="lawusti_id" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo">{{ $lawusti_id }}</span>
+        </div>
 
         <!-- تصنيف الدعوى -->
         <div class="mb-4">
@@ -33,33 +39,40 @@
         <div class="mb-4">
             <label for="lawsuit_subject" class="block text-gray-700 text-right mb-2 font-cairo">موضوع الدعوى</label>
             <select id="lawsuit_subject" name="lawsuit_subject" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo">
-
+                <!-- إضافة خيارات لقائمة موضوع الدعوى -->
+                <option value="">اختر موضوع الدعوى</option>
+                <option value="بيع شقة">بيع شقة</option>
+                <option value="بيع سيارة">بيع سيارة</option>
+                <!-- يمكنك إضافة المزيد من الخيارات هنا -->
             </select>
         </div>
 
         <!-- زر التفاصيل -->
         <button id="details_button" type="button" class="btn btn-info mt-2">تفاصيل</button>
 
+        <!-- أكورديون يحتوي على نموذج الشقة -->
+        <div id="apartment_details" class="hidden mt-4 bg-gray-100 p-4 rounded-md"> @include('apartments.form') </div>
 
 
-        <div class="mb-4">
-            <label for="court" class="block text-gray-700 text-right mb-2 font-cairo">المحكمة</label>
-            <select id="court" name="court" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo">
-                <option value="">اختر المحكمة</option>
-                <option value="دمشق" {{ old('court', $lawsuit->court ?? '') == 'دمشق' ? 'selected' : '' }}>دمشق</option>
-                <option value="ببيلا" {{ old('court', $lawsuit->court ?? '') == 'ببيلا' ? 'selected' : '' }}>ببيلا</option>
-                <option value="داريا" {{ old('court', $lawsuit->court ?? '') == 'داريا' ? 'selected' : '' }}>داريا</option>
-                <option value="جرمانا" {{ old('court', $lawsuit->court ?? '') == 'جرمانا' ? 'selected' : '' }}>جرمانا</option>
-            </select>
+        <div class="container mx-auto mt-10 bg-white p-8 rounded shadow">
+            <div class="mb-4">
+                <label for="court" class="block text-gray-700 text-right mb-2 font-cairo">المحكمة</label>
+                <select id="court" name="court" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo">
+                    <option value="">اختر المحكمة</option>
+                    <option value="دمشق" {{ old('court', $lawsuit->court ?? '') == 'دمشق' ? 'selected' : '' }}>دمشق</option>
+                    <option value="ببيلا" {{ old('court', $lawsuit->court ?? '') == 'ببيلا' ? 'selected' : '' }}>ببيلا</option>
+                    <option value="داريا" {{ old('court', $lawsuit->court ?? '') == 'داريا' ? 'selected' : '' }}>داريا</option>
+                    <option value="جرمانا" {{ old('court', $lawsuit->court ?? '') == 'جرمانا' ? 'selected' : '' }}>جرمانا</option>
+                </select>
+            </div>
+
+
+
+            <div class="mb-4">
+                <label for="court_number" class="block text-gray-700 text-right mb-2 font-cairo">رقم المحكمة</label>
+                <input type="number" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo" id="court_number" name="court_number" min="1" max="20" value="{{ old('court_number', $lawsuit->court_number ?? '') }}">
+            </div>
         </div>
-
-
-
-        <div class="mb-4">
-            <label for="court_number" class="block text-gray-700 text-right mb-2 font-cairo">رقم المحكمة</label>
-            <input type="number" class="form-control block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-cairo" id="court_number" name="court_number" min="1" max="20" value="{{ old('court_number', $lawsuit->court_number ?? '') }}">
-        </div>
-
         <div class="mb-4">
             <label for="plaintiff_name" class="block text-gray-700 text-right mb-2 font-cairo">اسم المدعي</label>
             <div class="flex items-center space-x-3">
@@ -141,56 +154,34 @@
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 
-
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 var lawsuitTypeSelect = document.getElementById('lawsuit_type');
-                var lawsuitTypes = JSON.parse(lawsuitTypeSelect.getAttribute('data-lawsuit-types'));
                 var lawsuitSubjectSelect = document.getElementById('lawsuit_subject');
                 var detailsButton = document.getElementById('details_button');
-
-                // استخراج قيمة الموضوع من Blade بشكل آمن
-                var initialSubject = "{{ old('lawsuit_subject', $lawsuit->lawsuit_subject ?? '') }}";
-
-                function updateLawsuitSubjects(selectedType) {
-                    var subjects = lawsuitTypes[selectedType] || [];
-                    lawsuitSubjectSelect.innerHTML = ' ';
-                    subjects.forEach(function(subject) {
-                        var option = document.createElement('option');
-                        option.value = subject;
-                        option.text = subject;
-                        if (subject === initialSubject) {
-                            option.selected = true;
-                        }
-                        lawsuitSubjectSelect.appendChild(option);
-                    });
-                }
+                var apartmentDetails = document.getElementById('apartment_details');
 
                 function updateDetailsButtonLink(selectedSubject) {
-                    var url = '';
-
-                    switch (selectedSubject) {
-                        case 'بيع شقة':
-                            url = '/apartments/create';
-                            break;
-                        case 'بيع سيارة':
-                            url = '/cars/create';
-                            break;
-                        default:
-                            url = '#'; // يمكنك تعيين رابط افتراضي إذا لم يكن هناك موضوع محدد
-                            break;
+                    if (selectedSubject === 'بيع شقة') {
+                        detailsButton.onclick = function() {
+                            apartmentDetails.classList.toggle('hidden');
+                        };
+                    } else {
+                        detailsButton.onclick = function() {
+                            alert('لا يوجد تفاصيل متاحة لهذا الموضوع');
+                        };
+                        apartmentDetails.classList.add('hidden');
                     }
-
-                    detailsButton.setAttribute('onclick', `location.href='${url}'`);
                 }
 
                 // استدعاء الوظيفة لملء موضوع الدعوى بناءً على القيمة الحالية
-                updateLawsuitSubjects(lawsuitTypeSelect.value);
+                // يمكنك إضافة وظيفة updateLawsuitSubjects إذا كانت موجودة.
+                // updateLawsuitSubjects(lawsuitTypeSelect.value); 
                 updateDetailsButtonLink(lawsuitSubjectSelect.value);
 
                 // تحديث الرابط عند تغيير القيمة
                 lawsuitTypeSelect.addEventListener('change', function() {
-                    updateLawsuitSubjects(this.value);
+                    // updateLawsuitSubjects(this.value);
                     updateDetailsButtonLink(lawsuitSubjectSelect.value);
                 });
 

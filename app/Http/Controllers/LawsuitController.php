@@ -54,6 +54,10 @@ class LawsuitController extends Controller
 
     public function create()
     {
+
+        $lastLawsuit = Lawsuit::latest()->first();
+        // إذا كانت هناك قضايا سابقة، زيادة قيمة رقم القضية بمقدار واحد، وإلا تعيين 1 كرقم بداية 
+        $lawusti_id = $lastLawsuit ? $lastLawsuit->id + 1 : 1; // تمرير المتغير إلى العرض 
         $lawsuitTypes = [
             'مدني' => ['بيع شقة', 'بيع سيارة'],
             'شرعي' => ['طلاق', 'زواج', 'خلع', 'تفريق'],
@@ -64,7 +68,7 @@ class LawsuitController extends Controller
 
         $clients = Client::all();
 
-        return view('lawsuits.create', compact('lawsuitTypes', 'clients'));
+        return view('lawsuits.create', compact('lawsuitTypes', 'clients', 'lawusti_id'));
     }
 
 
@@ -74,6 +78,7 @@ class LawsuitController extends Controller
     {
         // التحقق من صحة البيانات
         $validatedData = $request->validate([
+
             'lawsuit_type' => 'nullable|string|max:255',
             'lawsuit_subject' => 'nullable|string|max:255',
             'court' => 'nullable|string|max:255',
@@ -125,7 +130,6 @@ class LawsuitController extends Controller
     {
 
         $clients = Client::all();
-        $lawsuit->load('plaintiff', 'defendant');
         return view('lawsuits.show', compact('lawsuit', 'clients'));
     }
 

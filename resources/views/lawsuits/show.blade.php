@@ -29,11 +29,11 @@
                     </tr>
                     <tr>
                         <th class="align-middle">اسم المدعي</th>
-                        <td class="align-middle">{{ $lawsuit->plaintiff->full_name }}</td>
+                        <td class="align-middle">{{ $lawsuit->client->full_name}}</td>
                     </tr>
                     <tr>
                         <th class="align-middle">اسم المدعى عليه</th>
-                        <td class="align-middle">{{ $lawsuit->defendant->full_name }}</td>
+                        <td class="align-middle">{{ $lawsuit->client->full_name}} </td>
 
                     <tr>
                         <th class="align-middle">حالة القضية</th>
