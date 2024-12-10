@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\Lawsuit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,10 +39,9 @@ class ClientController extends Controller
         return view('clients.index', compact('clients'));
     }
 
-
-
-    public function create()
+    public function create(Request $request)
     {
+
         return view('clients.create');
     }
 
@@ -63,9 +63,9 @@ class ClientController extends Controller
         $client->user_client_number = $nextClientNumber;
         $client->save();
 
-        return response()->json(['success' => true, 'client' => $client]);
+        // إعادة التوجيه إلى صفحة إضافة تفاصيل الشقة
+        return redirect()->route('courts.create')->with('success', 'تم حفظ العميل بنجاح. يرجى إضافة تفاصيل الشقة.');
     }
-
 
     public function show(Client $client)
     {
@@ -100,7 +100,6 @@ class ClientController extends Controller
         $client->delete();
         return redirect()->route('clients.index');
     }
-
 
     public function list()
     {

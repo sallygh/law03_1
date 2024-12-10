@@ -6,12 +6,9 @@
     <form action="{{ route('lawsuits.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @include('lawsuits.form')
-        <button type="submit" class="btn btn-primary mt-3">حفظ</button>
+
     </form>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var lawsuitForm = document.getElementById('lawsuitForm');
 
 
 </div>

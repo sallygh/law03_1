@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Auth;
 class Lawsuit extends Model
 {
     use HasFactory;
+    protected $fillable = ['lawsuit_type', 'lawsuit_subject', 'notes', 'user_id', 'team_id', 'user_case_number'];
 
-    protected $fillable = ['lawsuit_type', 'lawsuit_subject', 'court', 'court_number', 'plaintiff_name', 'defendant_name', 'lawsuit_status', 'attachments', 'agreed_amount', 'remaining_amount', 'paid_amount', 'notes', 'base_number', 'decision_number', 'user_id', 'team_id', 'user_case_number', 'apartment_id', 'client_id'];
 
     protected $casts = [
         'attachments' => 'array',
@@ -52,5 +52,9 @@ class Lawsuit extends Model
     public function client()
     {
         return $this->belongsTo(Client::class);
+    }
+    public function court()
+    {
+        return $this->belongsTo(Court::class);
     }
 }
