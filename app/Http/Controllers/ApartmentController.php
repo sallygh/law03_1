@@ -32,13 +32,6 @@ class ApartmentController extends Controller
         $apartment = new Apartment($request->all());
         $apartment->save();
 
-        // تحقق من المصدر وأعد التوجيه بناءً عليه
-        if ($request->input('source') === 'direct') {
-            // استرجاع البيانات من الجلسة
-            $lawsuitData = json_decode($request->session()->get('lawsuitData'), true);
-            // إعادة توجيه المستخدم إلى نموذج القضية مع البيانات المسترجعة
-            return redirect()->route('lawsuits.create')->withInput($lawsuitData)->with('success', 'تم إنشاء الشقة بنجاح. الرجاء استكمال تفاصيل القضية.');
-        }
 
         return redirect()->route('apartments.index')->with('success', 'تم إنشاء الشقة بنجاح.');
     }
